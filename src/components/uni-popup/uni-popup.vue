@@ -192,38 +192,40 @@
 		},
 		mounted() {
 			const fixSize = () => {
+				let windowWidth, windowHeight, windowTop, safeArea, screenHeight, safeAreaInsets;
+
 				// #ifdef MP-WEIXIN
-				const {
-					windowWidth,
-					windowHeight,
-					windowTop,
-					safeArea,
-					screenHeight,
-					safeAreaInsets
-				} = uni.getWindowInfo()
+				const windowInfo = uni.getWindowInfo();
+				windowWidth = windowInfo.windowWidth;
+				windowHeight = windowInfo.windowHeight;
+				windowTop = windowInfo.windowTop;
+				safeArea = windowInfo.safeArea;
+				screenHeight = windowInfo.screenHeight;
+				safeAreaInsets = windowInfo.safeAreaInsets;
 				// #endif
+
 				// #ifndef MP-WEIXIN
-				const {
-					windowWidth,
-					windowHeight,
-					windowTop,
-					safeArea,
-					screenHeight,
-					safeAreaInsets
-				} = uni.getSystemInfoSync()
+				const systemInfo = uni.getSystemInfoSync();
+				windowWidth = systemInfo.windowWidth;
+				windowHeight = systemInfo.windowHeight;
+				windowTop = systemInfo.windowTop;
+				safeArea = systemInfo.safeArea;
+				screenHeight = systemInfo.screenHeight;
+				safeAreaInsets = systemInfo.safeAreaInsets;
 				// #endif
-				this.popupWidth = windowWidth
-				this.popupHeight = windowHeight + (windowTop || 0)
+
+				this.popupWidth = windowWidth;
+				this.popupHeight = windowHeight + (windowTop || 0);
 				// TODO fix by mehaotian 是否适配底部安全区 ,目前微信ios 、和 app ios 计算有差异，需要框架修复
 				if (safeArea && this.safeArea) {
 					// #ifdef MP-WEIXIN
-					this.safeAreaInsets = screenHeight - safeArea.bottom
+					this.safeAreaInsets = screenHeight - safeArea.bottom;
 					// #endif
 					// #ifndef MP-WEIXIN
-					this.safeAreaInsets = safeAreaInsets.bottom
+					this.safeAreaInsets = safeAreaInsets.bottom;
 					// #endif
 				} else {
-					this.safeAreaInsets = 0
+					this.safeAreaInsets = 0;
 				}
 			}
 			fixSize()
@@ -316,7 +318,7 @@
 					type: direction
 				})
 			},
-			close(type) {
+			close() {
 				this.showTrans = false
 				this.$emit('change', {
 					show: false,
@@ -516,3 +518,4 @@
 		top: 0;
 	}
 </style>
+
