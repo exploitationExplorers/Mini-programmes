@@ -1,0 +1,75 @@
+{
+	"pages": [
+		{
+			"path": "pages/discover/index",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/message/index",
+			"style": {
+				"navigationBarTitleText": "消息"
+			}
+		},
+		{
+			"path": "pages/community/index",
+			"style": {
+				"navigationBarTitleText": "社区",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#7668fa",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"list": [
+			{
+				"pagePath": "pages/discover/index",
+				"text": "发现",
+				"iconPath": "static/tabbar/discover.png",
+				"selectedIconPath": "static/tabbar/discover-active.png"
+			},
+			{
+				"pagePath": "pages/message/index",
+				"text": "消息",
+				"iconPath": "static/tabbar/message.png",
+				"selectedIconPath": "static/tabbar/message-active.png"
+			},
+			{
+				"pagePath": "pages/community/index",
+				"text": "社区",
+				"iconPath": "static/tabbar/community.png",
+				"selectedIconPath": "static/tabbar/community-active.png"
+			},
+			{
+				"pagePath": "pages/profile/index",
+				"text": "我的",
+				"iconPath": "static/tabbar/profile.png",
+				"selectedIconPath": "static/tabbar/profile-active.png"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "听障交友",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#f8f9fa"
+	},
+	"uniIdRouter": {},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	}
+}
