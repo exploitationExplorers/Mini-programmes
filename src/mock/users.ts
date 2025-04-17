@@ -15,7 +15,7 @@ export const users: User[] = [
   {
     id: 1,
     username: '张小明',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/download-2.jpg',
     bio: '听力障碍不是障碍，沟通无界限',
     tags: ['听障', '90后', '程序员'],
     isRecommended: false,
@@ -26,7 +26,7 @@ export const users: User[] = [
   {
     id: 2,
     username: '李华',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/download-3.jpg',
     bio: '热爱生活，热爱手语',
     tags: ['视障', '教师'],
     isRecommended: true,
@@ -37,7 +37,7 @@ export const users: User[] = [
   {
     id: 3,
     username: '王芳',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-1.jpg',
     bio: '手语翻译员，希望帮助更多人',
     tags: ['手语翻译', '志愿者'],
     isRecommended: true,
@@ -48,7 +48,7 @@ export const users: User[] = [
   {
     id: 4,
     username: '赵明',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/download-3.jpg',
     bio: '热爱摄影，记录美好生活',
     tags: ['听障', '摄影师'],
     isRecommended: true,
@@ -59,7 +59,7 @@ export const users: User[] = [
   {
     id: 5,
     username: '刘洋',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/download-4.jpg',
     bio: '音乐是我的语言',
     tags: ['视障', '音乐家'],
     isRecommended: true,
@@ -70,7 +70,7 @@ export const users: User[] = [
   {
     id: 6,
     username: '陈静',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-2.jpg',
     bio: '特殊教育工作者，致力于听障儿童教育',
     tags: ['特教', '教师'],
     isRecommended: true,
