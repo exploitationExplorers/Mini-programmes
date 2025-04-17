@@ -16,7 +16,7 @@ export const notifications: Notification[] = [
     type: 'follow',
     userId: 2,
     username: '李华',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/download-2.jpg',
     content: '关注了您，点击查看详情！',
     time: '1小时前',
     isRead: false
@@ -26,7 +26,7 @@ export const notifications: Notification[] = [
     type: 'like',
     userId: 3,
     username: '王芳',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-1.jpg',
     content: '赞了您的动态：今天参加了一个手语交流活动...',
     time: '2小时前',
     isRead: false
@@ -36,7 +36,7 @@ export const notifications: Notification[] = [
     type: 'comment',
     userId: 4,
     username: '赵明',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-2.jpg',
     content: '评论了您的动态：这个活动很有意义，下次我也想参加！',
     time: '3小时前',
     isRead: true
@@ -44,7 +44,7 @@ export const notifications: Notification[] = [
   {
     id: 4,
     type: 'system',
-    avatar: '/static/system-avatar.png',
+    avatar: '/static/image/commont/images.png',
     content: '您的账号已完成实名认证，现在可以使用所有功能了！',
     time: '昨天',
     isRead: true
@@ -54,7 +54,7 @@ export const notifications: Notification[] = [
     type: 'follow',
     userId: 5,
     username: '刘洋',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-1.jpg',
     content: '关注了您，点击查看详情！',
     time: '昨天',
     isRead: true
@@ -64,7 +64,7 @@ export const notifications: Notification[] = [
     type: 'like',
     userId: 6,
     username: '陈静',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/girl/images-2.jpg',
     content: '赞了您的动态：分享一个我最近学到的编程技巧...',
     time: '2天前',
     isRead: true
@@ -74,7 +74,7 @@ export const notifications: Notification[] = [
     type: 'comment',
     userId: 7,
     username: '林小雨',
-    avatar: '/static/default-avatar.png',
+    avatar: '/static/image/boy/3.webp',
     content: '评论了您的动态：这个技巧很实用，谢谢分享！',
     time: '2天前',
     isRead: true
@@ -82,7 +82,7 @@ export const notifications: Notification[] = [
   {
     id: 8,
     type: 'system',
-    avatar: '/static/system-avatar.png',
+    avatar: '/static/image/commont/images.png',
     content: '系统将于今晚22:00-23:00进行维护，请提前做好准备。',
     time: '3天前',
     isRead: true
