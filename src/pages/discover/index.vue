@@ -46,7 +46,9 @@
             </view>
             <view class="user-name">{{user.username}}</view>
             <view class="user-tag" v-if="user.tags && user.tags.length > 0">{{user.tags[0]}}</view>
-            <button class="follow-btn">关注</button>
+            <button class="follow-btn" @click.stop="followUser(user.id)" :class="{ 'followed': isUserFollowed(user.id) }">
+              {{ isUserFollowed(user.id) ? '已关注' : '关注' }}
+            </button>
           </view>
         </scroll-view>
       </view>
@@ -101,6 +103,7 @@ const events = ref<Event[]>([]);
 const users = ref<User[]>([]);
 const loading = ref(false);
 const searchKeyword = ref('');
+const followedUsers = ref<number[]>([]); // 存储已关注用户的ID
 
 // 加载活动数据
 const loadEvents = async () => {
@@ -121,6 +124,8 @@ const loadEvents = async () => {
 
 // 加载推荐用户
 const loadRecommendedUsers = async () => {
+
+
   loading.value = true;
   try {
     users.value = await mockApi.getRecommendedUsers();
@@ -175,6 +180,38 @@ const navigateToEventDetail = (eventId: number) => {
   uni.navigateTo({
     url: `/pages/discover/event-detail?id=${eventId}`
   });
+};
+
+// 关注用户
+const followUser = (userId: number) => {
+  // 检查用户是否已经关注
+  const index = followedUsers.value.indexOf(userId);
+
+  if (index === -1) {
+    // 如果没有关注，则添加到关注列表
+    followedUsers.value.push(userId);
+    uni.showToast({
+      title: '关注成功',
+      icon: 'success',
+      duration: 1500
+    });
+  } else {
+    // 如果已经关注，则取消关注
+    followedUsers.value.splice(index, 1);
+    uni.showToast({
+      title: '已取消关注',
+      icon: 'none',
+      duration: 1500
+    });
+  }
+
+  // 实际应用中应该调用API来更新关注状态
+  // 这里只是模拟前端状态变化
+};
+
+// 检查用户是否已关注
+const isUserFollowed = (userId: number) => {
+  return followedUsers.value.includes(userId);
 };
 
 onMounted(() => {
@@ -362,6 +399,13 @@ onMounted(() => {
         background-color: #7668fa;
         color: #ffffff;
         border-radius: 25rpx;
+        transition: all 0.3s ease;
+
+        &.followed {
+          background-color: #f2f3f5;
+          color: #666;
+          border: 1px solid #e0e0e0;
+        }
       }
     }
   }
@@ -395,6 +439,7 @@ onMounted(() => {
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
+          line-clamp: 2;
           overflow: hidden;
         }
 
