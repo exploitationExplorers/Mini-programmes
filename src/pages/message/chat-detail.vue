@@ -9,9 +9,9 @@
     </view>
 
     <!-- 聊天内容区域 -->
-    <scroll-view 
-      scroll-y 
-      class="chat-messages" 
+    <scroll-view
+      scroll-y
+      class="chat-messages"
       :scroll-top="scrollTop"
       :scroll-with-animation="true"
       @scrolltoupper="loadMoreMessages"
@@ -22,9 +22,9 @@
       </view>
 
       <view class="message-list">
-        <view 
-          class="message-item" 
-          v-for="(message, index) in chatMessages" 
+        <view
+          class="message-item"
+          v-for="(message, index) in chatMessages"
           :key="index"
           :class="{ 'self': message.isSelf }"
         >
@@ -33,7 +33,10 @@
           </view>
           <view class="message-content">
             <view class="message-bubble">
-              <text>{{ message.content }}</text>
+              <text v-if="!message.isEmoji">{{ message.content }}</text>
+              <view v-else class="emoji-message">
+                <text class="emoji-large">{{ message.content }}</text>
+              </view>
             </view>
             <view class="message-time">{{ message.time }}</view>
           </view>
@@ -44,17 +47,33 @@
       </view>
     </scroll-view>
 
+    <!-- 表情选择器 -->
+    <view class="emoji-picker" v-if="showEmoji">
+      <scroll-view scroll-y class="emoji-container">
+        <view class="emoji-grid">
+          <view
+            class="emoji-item"
+            v-for="(emoji, index) in emojiList"
+            :key="index"
+            @click="selectEmoji(emoji)"
+          >
+            <text class="emoji-text">{{ emoji.emoji }}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
     <!-- 输入区域 -->
     <view class="chat-input-area">
       <view class="input-box">
-        <input 
-          type="text" 
-          v-model="messageText" 
-          placeholder="输入消息..." 
+        <input
+          type="text"
+          v-model="messageText"
+          placeholder="输入消息..."
           confirm-type="send"
           @confirm="sendMessage"
         />
-        <view class="emoji-btn">
+        <view class="emoji-btn" @click="showEmojiPicker">
           <i class="far fa-smile"></i>
         </view>
       </view>
@@ -66,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 
 // 获取路由参数
 const query = computed(() => {
@@ -84,6 +103,82 @@ const chatMessages = ref<any[]>([]);
 const messageText = ref('');
 const loading = ref(false);
 const scrollTop = ref(0);
+
+// 表情相关状态
+const showEmoji = ref(false);
+
+// 使用 emoji 字符代替图片
+const emojiList = ref([
+  { id: 1, emoji: '😀' }, // 笑脸
+  { id: 2, emoji: '😁' }, // 笑脸带笑眼
+  { id: 3, emoji: '😂' }, // 笑中带泪
+  { id: 4, emoji: '😃' }, // 开心笑
+  { id: 5, emoji: '😄' }, // 开心笑带笑眼
+  { id: 6, emoji: '😅' }, // 尴尬笑
+  { id: 7, emoji: '😆' }, // 狂笑
+  { id: 8, emoji: '😇' }, // 天使笑
+  { id: 9, emoji: '😈' }, // 恶魔笑
+  { id: 10, emoji: '😉' }, // 眨眼
+  { id: 11, emoji: '😊' }, // 害羞笑
+  { id: 12, emoji: '😋' }, // 馋嘴
+  { id: 13, emoji: '😌' }, // 安心
+  { id: 14, emoji: '😍' }, // 爱心眼
+  { id: 15, emoji: '😎' }, // 墨镜笑
+  { id: 16, emoji: '😏' }, // 得意笑
+  { id: 17, emoji: '😚' }, // 亲吻
+  { id: 18, emoji: '😛' }, // 吐舌头
+  { id: 19, emoji: '😜' }, // 调皮
+  { id: 20, emoji: '😝' }, // 吐舌头闭眼
+  { id: 21, emoji: '😞' }, // 失望
+  { id: 22, emoji: '😟' }, // 担忧
+  { id: 23, emoji: '😪' }, // 困倦
+  { id: 24, emoji: '😫' }, // 疲惫
+]);
+
+// 显示/隐藏表情选择器
+const showEmojiPicker = () => {
+  showEmoji.value = !showEmoji.value;
+};
+
+// 选择表情
+const selectEmoji = (emoji: any) => {
+  // 发送表情消息
+  chatMessages.value.push({
+    isSelf: true,
+    content: emoji.emoji,
+    isEmoji: true,
+    time: formatTime(new Date())
+  });
+
+  // 滚动到底部
+  scrollToBottom();
+
+  // 隐藏表情选择器
+  showEmoji.value = false;
+
+  // 模拟对方回复
+  setTimeout(() => {
+    const randomResponses = [
+      '这个表情真可爱！',
+      '哈哈，有趣！',
+      '我也喜欢这个表情！',
+      '太有趣了！',
+      '很适合这个场景！'
+    ];
+
+    const randomIndex = Math.floor(Math.random() * randomResponses.length);
+
+    chatMessages.value.push({
+      isSelf: false,
+      content: randomResponses[randomIndex],
+      time: formatTime(new Date()),
+      avatar: '/static/image/boy/download-3.jpg'
+    });
+
+    // 再次滚动到底部
+    scrollToBottom();
+  }, 1000);
+};
 
 // 模拟聊天数据
 const mockMessages = [
@@ -120,12 +215,12 @@ const mockMessages = [
 // 加载聊天记录
 const loadChatMessages = () => {
   loading.value = true;
-  
+
   // 模拟API请求延迟
   setTimeout(() => {
     chatMessages.value = [...mockMessages];
     loading.value = false;
-    
+
     // 滚动到底部
     scrollToBottom();
   }, 500);
@@ -134,9 +229,9 @@ const loadChatMessages = () => {
 // 加载更多历史消息
 const loadMoreMessages = () => {
   if (loading.value) return;
-  
+
   loading.value = true;
-  
+
   // 模拟加载更多历史消息
   setTimeout(() => {
     const historyMessages = [
@@ -152,7 +247,7 @@ const loadMoreMessages = () => {
         time: '昨天 09:35'
       }
     ];
-    
+
     chatMessages.value = [...historyMessages, ...chatMessages.value];
     loading.value = false;
   }, 800);
@@ -161,20 +256,20 @@ const loadMoreMessages = () => {
 // 发送消息
 const sendMessage = () => {
   if (!messageText.value.trim()) return;
-  
+
   // 添加新消息
   chatMessages.value.push({
     isSelf: true,
     content: messageText.value,
     time: formatTime(new Date())
   });
-  
+
   // 清空输入框
   messageText.value = '';
-  
+
   // 滚动到底部
   scrollToBottom();
-  
+
   // 模拟对方回复
   setTimeout(() => {
     chatMessages.value.push({
@@ -183,7 +278,7 @@ const sendMessage = () => {
       time: formatTime(new Date()),
       avatar: '/static/image/boy/download-3.jpg'
     });
-    
+
     // 再次滚动到底部
     scrollToBottom();
   }, 1000);
@@ -192,7 +287,7 @@ const sendMessage = () => {
 // 滚动到底部
 const scrollToBottom = () => {
   // 使用nextTick确保DOM已更新
-  uni.nextTick(() => {
+  nextTick(() => {
     // 随机大数，确保滚动到底部
     scrollTop.value = Math.random() * 10000;
   });
@@ -216,23 +311,23 @@ onMounted(() => {
   flex-direction: column;
   height: 100vh;
   background-color: #f5f5f5;
-  
+
   .chat-header {
     padding: 20rpx 30rpx;
     background-color: #ffffff;
     border-bottom: 1rpx solid #f0f0f0;
-    
+
     .user-info {
       display: flex;
       flex-direction: column;
       align-items: center;
-      
+
       .username {
         font-size: 32rpx;
         font-weight: bold;
         color: #333;
       }
-      
+
       .status {
         font-size: 24rpx;
         color: #7668fa;
@@ -240,17 +335,17 @@ onMounted(() => {
       }
     }
   }
-  
+
   .chat-messages {
     flex: 1;
     padding: 20rpx;
-    
+
     .loading {
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20rpx 0;
-      
+
       .loading-spinner {
         width: 40rpx;
         height: 40rpx;
@@ -260,27 +355,27 @@ onMounted(() => {
         margin-bottom: 10rpx;
         animation: spin 1s linear infinite;
       }
-      
+
       text {
         font-size: 24rpx;
         color: #999;
       }
     }
-    
+
     .message-list {
       padding-bottom: 20rpx;
     }
-    
+
     .message-item {
       display: flex;
       margin-bottom: 30rpx;
-      
+
       &.self {
         flex-direction: row-reverse;
-        
+
         .message-content {
           align-items: flex-end;
-          
+
           .message-bubble {
             background-color: #7668fa;
             color: #ffffff;
@@ -288,37 +383,48 @@ onMounted(() => {
           }
         }
       }
-      
+
       .avatar {
         width: 80rpx;
         height: 80rpx;
         margin: 0 20rpx;
-        
+
         image {
           width: 100%;
           height: 100%;
           border-radius: 50%;
         }
       }
-      
+
       .message-content {
         display: flex;
         flex-direction: column;
         max-width: 70%;
-        
+
         .message-bubble {
           padding: 20rpx;
           background-color: #ffffff;
           border-radius: 4rpx 20rpx 20rpx 20rpx;
           box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.05);
-          
+
           text {
             font-size: 28rpx;
             line-height: 1.4;
             word-break: break-word;
           }
+
+          .emoji-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .emoji-large {
+              font-size: 80rpx;
+              line-height: 1;
+            }
+          }
         }
-        
+
         .message-time {
           font-size: 22rpx;
           color: #999;
@@ -326,20 +432,59 @@ onMounted(() => {
         }
       }
     }
-    
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
   }
-  
+
+  // 表情选择器样式
+  .emoji-picker {
+    position: relative;
+    height: 400rpx;
+    background-color: #ffffff;
+    border-top: 1rpx solid #f0f0f0;
+
+    .emoji-container {
+      height: 100%;
+      padding: 20rpx;
+
+      .emoji-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .emoji-item {
+          width: 120rpx;
+          height: 120rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 20rpx;
+
+          .emoji-text {
+            font-size: 50rpx;
+            transition: all 0.2s ease;
+          }
+
+          &:active {
+            .emoji-text {
+              transform: scale(1.2);
+            }
+          }
+        }
+      }
+    }
+  }
+
   .chat-input-area {
     display: flex;
     align-items: center;
     padding: 20rpx;
     background-color: #ffffff;
     border-top: 1rpx solid #f0f0f0;
-    
+
     .input-box {
       flex: 1;
       display: flex;
@@ -347,23 +492,23 @@ onMounted(() => {
       background-color: #f5f5f5;
       border-radius: 36rpx;
       padding: 0 20rpx;
-      
+
       input {
         flex: 1;
         height: 70rpx;
         font-size: 28rpx;
       }
-      
+
       .emoji-btn {
         padding: 0 10rpx;
-        
+
         i {
           font-size: 40rpx;
           color: #999;
         }
       }
     }
-    
+
     .send-btn {
       width: 70rpx;
       height: 70rpx;
@@ -373,7 +518,7 @@ onMounted(() => {
       margin-left: 20rpx;
       background-color: #7668fa;
       border-radius: 50%;
-      
+
       i {
         font-size: 30rpx;
         color: #ffffff;
