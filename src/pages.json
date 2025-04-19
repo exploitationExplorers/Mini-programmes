@@ -14,6 +14,12 @@
 			}
 		},
 		{
+			"path": "pages/message/chat-detail",
+			"style": {
+				"navigationBarTitleText": "聊天"
+			}
+		},
+		{
 			"path": "pages/community/index",
 			"style": {
 				"navigationBarTitleText": "社区",

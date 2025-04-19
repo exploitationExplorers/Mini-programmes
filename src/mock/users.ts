@@ -18,7 +18,7 @@ export const users: User[] = [
     avatar: '/static/image/boy/download-2.jpg',
     bio: '听力障碍不是障碍，沟通无界限',
     tags: ['听障', '90后', '程序员'],
-    isRecommended: false,
+    isRecommended: true,
     followers: 356,
     following: 128,
     posts: 48

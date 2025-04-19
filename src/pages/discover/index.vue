@@ -3,13 +3,8 @@
     <view class="search-bar">
       <view class="search-box">
         <i class="fas fa-search"></i>
-        <input
-          type="text"
-          v-model="searchKeyword"
-          placeholder="搜索好友、话题"
-          placeholder-class="placeholder"
-          @confirm="searchUsers"
-        />
+        <input type="text" v-model="searchKeyword" placeholder="搜索好友、话题" placeholder-class="placeholder"
+          @confirm="searchUsers" />
         <view v-if="searchKeyword" class="clear-btn" @click="searchKeyword = ''; loadRecommendedUsers()">
           <i class="fas fa-times"></i>
         </view>
@@ -35,18 +30,14 @@
         </view>
 
         <scroll-view v-else scroll-x class="user-scroll">
-          <view
-            class="user-card"
-            v-for="user in users"
-            :key="user.id"
-            @click="navigateToUserDetail(user.id)"
-          >
+          <view class="user-card" v-for="user in users" :key="user.id" @click="navigateToUserDetail(user.id)">
             <view class="user-avatar">
               <image :src="user.avatar" mode="aspectFill"></image>
             </view>
-            <view class="user-name">{{user.username}}</view>
-            <view class="user-tag" v-if="user.tags && user.tags.length > 0">{{user.tags[0]}}</view>
-            <button class="follow-btn" @click.stop="followUser(user.id)" :class="{ 'followed': isUserFollowed(user.id) }">
+            <view class="user-name">{{ user.username }}</view>
+            <view class="user-tag" v-if="user.tags && user.tags.length > 0">{{ user.tags[0] }}</view>
+            <button class="follow-btn" @click.stop="followUser(user.id)"
+              :class="{ 'followed': isUserFollowed(user.id) }">
               {{ isUserFollowed(user.id) ? '已关注' : '关注' }}
             </button>
           </view>
@@ -71,12 +62,7 @@
         </view>
 
         <view v-else class="event-list">
-          <view
-            class="event-card"
-            v-for="event in events"
-            :key="event.id"
-            @click="navigateToEventDetail(event.id)"
-          >
+          <view class="event-card" v-for="event in events" :key="event.id" @click="navigateToEventDetail(event.id)">
             <image class="event-image" :src="event.image" mode="aspectFill"></image>
             <view class="event-info">
               <view class="event-title">{{ event.title }}</view>
@@ -224,7 +210,8 @@ onMounted(() => {
 .discover-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 50px); /* 减去tabbar高度 */
+  height: calc(100vh - 50px);
+  /* 减去tabbar高度 */
   background-color: #f8f9fa;
 
   .search-bar {
@@ -321,8 +308,13 @@ onMounted(() => {
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
 
@@ -443,8 +435,7 @@ onMounted(() => {
           overflow: hidden;
         }
 
-        .event-meta {
-          display: flex;
+        .event-meta {  display: flex;
 
           .event-time, .event-location {
             font-size: 22rpx;
