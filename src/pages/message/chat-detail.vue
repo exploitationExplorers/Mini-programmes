@@ -29,7 +29,7 @@
           :class="{ 'self': message.isSelf }"
         >
           <view class="avatar" v-if="!message.isSelf">
-            <image :src="message.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+            <image :src="userAvater || '/static/default-avatar.png'" mode="aspectFill"></image>
           </view>
           <view class="message-content">
             <view class="message-bubble">
@@ -97,6 +97,7 @@ const query = computed(() => {
 
 const userId = computed(() => Number(query.value.id) || 0);
 const username = computed(() => query.value.username || '用户');
+const userAvater = computed(() => query.value.image);
 
 // 聊天相关状态
 const chatMessages = ref<any[]>([]);

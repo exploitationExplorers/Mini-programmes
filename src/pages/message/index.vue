@@ -174,7 +174,7 @@ const changeTab = (tab: string) => {
 // 跳转到聊天详情页
 const navigateToChat = (message: Message) => {
   uni.navigateTo({
-    url: `/pages/message/chat-detail?id=${message.id}&username=${message.username}`
+    url: `/pages/message/chat-detail?id=${message.id}&username=${message.username}&image=${message.avatar}`
   });
 };
 
