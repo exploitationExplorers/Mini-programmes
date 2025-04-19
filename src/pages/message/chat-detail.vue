@@ -85,20 +85,30 @@
 </template>
 
 <script setup lang="ts">
+
+import { onLoad } from '@dcloudio/uni-app';
 import { ref, onMounted, computed, nextTick } from 'vue';
 
 // 获取路由参数
-const query = computed(() => {
-  const pages = getCurrentPages();
-  const currentPage = pages[pages.length - 1];
-  // @ts-ignore
-  return currentPage.$page?.options || {};
+// const query = computed(() => {
+//   const pages = getCurrentPages();
+//   const currentPage = pages[pages.length - 1];
+//   // @ts-ignore
+//   return currentPage.$page?.options || {};
+// });
+// const userId = computed(() => Number(query.value.id) || 0);
+// const username = computed(() => query.value.username || '用户');
+// const userAvater = computed(() => query.value.image);
+const userId = ref(0);
+const username = ref<String>('');
+const userAvater = ref('');
+onLoad((options: any) => {
+  console.log(options,'options');
+  userId.value = Number(options.id) || 0;
+  username.value = options.username || '用户';
+  userAvater.value = options.image;
+
 });
-
-const userId = computed(() => Number(query.value.id) || 0);
-const username = computed(() => query.value.username || '用户');
-const userAvater = computed(() => query.value.image);
-
 // 聊天相关状态
 const chatMessages = ref<any[]>([]);
 const messageText = ref('');
@@ -107,7 +117,6 @@ const scrollTop = ref(0);
 
 // 表情相关状态
 const showEmoji = ref(false);
-
 // 使用 emoji 字符代替图片
 const emojiList = ref([
   { id: 1, emoji: '😀' }, // 笑脸
