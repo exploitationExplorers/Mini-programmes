@@ -47,8 +47,17 @@
       </view>
     </scroll-view>
 
+    <!-- 遮罩层 -->
+    <view class="emoji-mask" v-if="showEmoji" @click="closeEmojiPicker"></view>
+
     <!-- 表情选择器 -->
     <view class="emoji-picker" v-if="showEmoji">
+      <view class="emoji-header">
+        <view class="emoji-title">表情</view>
+        <view class="emoji-close" @click="closeEmojiPicker">
+          <i class="fas fa-times"></i>
+        </view>
+      </view>
       <scroll-view scroll-y class="emoji-container">
         <view class="emoji-grid">
           <view
@@ -87,7 +96,7 @@
 <script setup lang="ts">
 
 import { onLoad } from '@dcloudio/uni-app';
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 
 // 获取路由参数
 // const query = computed(() => {
@@ -147,7 +156,12 @@ const emojiList = ref([
 
 // 显示/隐藏表情选择器
 const showEmojiPicker = () => {
-  showEmoji.value = !showEmoji.value;
+  showEmoji.value = true;
+};
+
+// 关闭表情选择器
+const closeEmojiPicker = () => {
+  showEmoji.value = false;
 };
 
 // 选择表情
@@ -449,15 +463,65 @@ onMounted(() => {
     }
   }
 
+  // 遮罩层样式
+  .emoji-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 100;
+  }
+
   // 表情选择器样式
   .emoji-picker {
-    position: relative;
-    height: 400rpx;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 480rpx;
     background-color: #ffffff;
     border-top: 1rpx solid #f0f0f0;
+    box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.08);
+    border-radius: 24rpx 24rpx 0 0;
+    z-index: 101;
+    animation: slideUp 0.3s ease;
+
+    .emoji-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20rpx 30rpx;
+      border-bottom: 1rpx solid #f5f5f5;
+
+      .emoji-title {
+        font-size: 28rpx;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .emoji-close {
+        width: 50rpx;
+        height: 50rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+
+        i {
+          font-size: 24rpx;
+          color: #999;
+        }
+
+        &:active {
+          background-color: #f5f5f5;
+        }
+      }
+    }
 
     .emoji-container {
-      height: 100%;
+      height: calc(100% - 90rpx);
       padding: 20rpx;
 
       .emoji-grid {
@@ -466,25 +530,53 @@ onMounted(() => {
         justify-content: space-between;
 
         .emoji-item {
-          width: 120rpx;
-          height: 120rpx;
+          width: 16.666%;
+          height: 110rpx;
           display: flex;
           justify-content: center;
           align-items: center;
           margin-bottom: 20rpx;
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90rpx;
+            height: 90rpx;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: all 0.2s ease;
+          }
 
           .emoji-text {
             font-size: 50rpx;
             transition: all 0.2s ease;
+            z-index: 1;
           }
 
           &:active {
+            &::after {
+              background-color: rgba(118, 104, 250, 0.1);
+            }
+
             .emoji-text {
               transform: scale(1.2);
             }
           }
         }
       }
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
     }
   }
 
