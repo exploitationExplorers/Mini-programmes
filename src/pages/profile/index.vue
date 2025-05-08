@@ -174,6 +174,7 @@ import { ref, onMounted } from 'vue';
 import { mockApi } from '../../mock/index';
 import type { Post } from '../../mock/posts';
 import type { User } from '../../mock/users';
+import { onLoad, onShow } from '@dcloudio/uni-app';
 
 const activeTab = ref('posts');
 const userPosts = ref<Post[]>([]);
@@ -186,7 +187,26 @@ const loadUserInfo = async () => {
   loading.value = true;
   try {
     // 模拟当前用户ID为1
-    currentUser.value = await mockApi.getUserById(1);
+    const user = await mockApi.getUserById(1);
+    if (user) {
+      currentUser.value = user;
+      console.log('用户信息已更新:', user.username);
+
+      // 检查 localStorage 中是否有更新的数据
+      try {
+        const storedUsers = localStorage.getItem('mockUsers');
+        if (storedUsers) {
+          const users = JSON.parse(storedUsers);
+          const storedUser = users.find((u: any) => u.id === 1);
+          if (storedUser && JSON.stringify(storedUser) !== JSON.stringify(currentUser.value)) {
+            console.log('从 localStorage 更新用户数据:', storedUser);
+            currentUser.value = storedUser;
+          }
+        }
+      } catch (error) {
+        console.error('读取 localStorage 失败:', error);
+      }
+    }
   } catch (error) {
     console.error('加载用户信息失败', error);
     uni.showToast({
@@ -318,9 +338,35 @@ const showFeedbackActionSheet = () => {
   });
 };
 
+// 页面加载时初始化数据
 onMounted(() => {
   loadUserInfo();
   loadUserPosts();
+});
+
+// 使用 uni-app 的页面生命周期钩子
+onLoad(() => {
+  console.log('页面加载');
+});
+
+onShow(() => {
+  console.log('页面显示，检查是否需要刷新用户信息');
+
+  // 始终刷新用户信息，确保数据是最新的
+  loadUserInfo();
+
+  // 检查全局变量，如果需要刷新，则重新加载帖子
+  const app = getApp();
+  if (app && app.globalData && app.globalData.needRefreshUserInfo) {
+    console.log('检测到需要刷新用户信息');
+    // 重置标记
+    app.globalData.needRefreshUserInfo = false;
+
+    // 如果在"我的动态"标签，则刷新帖子
+    if (activeTab.value === 'posts') {
+      loadUserPosts();
+    }
+  }
 });
 </script>
 
